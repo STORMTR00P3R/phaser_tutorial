@@ -42,6 +42,10 @@
         var score = 0;
         var gameOver = false;
         var scoreText;
+        var gameText;
+        // var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+        // spaceBar.on('down', listener)
 
         var game = new Phaser.Game(config);
 
@@ -68,6 +72,8 @@
             platforms.create(600, 400, 'ground');
             platforms.create(50, 250, 'ground');
             platforms.create(750, 220, 'ground');
+
+            platforms.children.entries[1].setSize(400, 30, true);
 
             // The player and its settings
             player = this.physics.add.sprite(100, 450, 'dude');
@@ -117,7 +123,7 @@
             bombs = this.physics.add.group();
 
             //  The score
-            scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+            scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
 
             //  Collide the player and the stars with the platforms
             this.physics.add.collider(player, platforms);
@@ -128,9 +134,17 @@
             this.physics.add.overlap(player, stars, collectStar, null, this);
 
             this.physics.add.collider(player, bombs, hitBomb, null, this);
+
         }
 
         function update() {
+            if (cursors.down.isDown) {
+                this.physics.world.gravity.set(0, -300);
+                player.setOrigin(0, 0);
+                player.angle = 180;
+
+            }
+
             if (cursors.left.isDown) {
                 player.setVelocityX(-160);
 
@@ -149,6 +163,15 @@
 
             if (cursors.up.isDown && player.body.touching.down) {
                 player.setVelocityY(-330);
+            }
+
+            if (cursors.up.isDown && player.angle == -180) {
+                player.setVelocityY(330);
+            }
+            var count = 0;
+            if (player.angle == -180 && count == 0) {
+                count = 1;
+
             }
         }
 
@@ -180,9 +203,17 @@
 
         function hitBomb(player, bomb) {
             player.setTint(0xff0000);
+
+            gameText = this.add.text(300, 200, 'Game Over', { fontSize: '32px', fill: '#000' });
+
+            gameText.setText('Game Over');
+
             this.physics.pause();
 
-            window.setTimeout(() => this.scene.restart(), 3000);
+            window.setTimeout(() => {
+                this.scene.restart()
+                gameText.setText('')
+            }, 3000);
         }
 
     </script>

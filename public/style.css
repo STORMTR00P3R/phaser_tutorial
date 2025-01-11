@@ -1,0 +1,13 @@
+html {
+    background: rgb(24, 24, 134);
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+canvas {
+    
+}

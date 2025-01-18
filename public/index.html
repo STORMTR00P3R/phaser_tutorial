@@ -84,6 +84,7 @@
 
                 // The player and its settings
                 player = this.physics.add.sprite(100, 450, 'dude');
+                player.setGravityY(50);
 
                 //  Player physics properties. Give the little guy a slight bounce.
                 player.setBounce(0.2);
@@ -149,16 +150,7 @@
                 // bottom of create function
 
                 this.input.keyboard.on('keydown', function (event) {
-                    console.log("physics world gravity: ", this.physics)
 
-                    // Toggle gravity
-                    if (scene.physics.world.gravity.y === 300) {
-                        scene.physics.world.gravity.y = -300;
-                    } else {
-                        scene.physics.world.gravity.y = 300;
-                    }
-
-                    console.log("key pressed: ", event.key)
                     if (event.key === "ArrowDown") {
                         console.log("camera angle: ", camera.rotation)
                         if (camera.rotation === 3.14) {
@@ -171,15 +163,26 @@
             }
 
             function update() {
+                var camera = this.cameras.main;
                 if (cursors.left.isDown) {
-                    player.setVelocityX(-160);
+                    if (camera.rotation == 3.14) {
+                        player.setVelocityX(160);
+                        player.anims.play('right', true);
+                    } else {
+                        player.setVelocityX(-160);
+                        player.anims.play('left', true);
 
-                    player.anims.play('left', true);
+                    }
                 }
                 else if (cursors.right.isDown) {
-                    player.setVelocityX(160);
+                    if (camera.rotation == 3.14) {
+                        player.setVelocityX(-160);
+                        player.anims.play('left', true);
+                    } else {
+                        player.setVelocityX(160);
+                        player.anims.play('right', true);
 
-                    player.anims.play('right', true);
+                    }
                 }
                 else {
                     player.setVelocityX(0);
@@ -191,26 +194,7 @@
                     player.setVelocityY(-330);
                 }
 
-                if (player.angle == -180) {
-                    if (cursors.left.isDown) {
-                        player.setVelocityX(160);
 
-                        player.anims.play('left', true);
-                    }
-                    if (cursors.right.isDown) {
-                        player.setVelocityX(-160);
-
-                        player.anims.play('right', true);
-                    }
-
-                    if (cursors.up.isDown) {
-                        player.setVelocityY(330);
-                    }
-                    var count = 0;
-                    if (count == 0) {
-                        count = 1;
-                    }
-                }
             }
 
             function collectStar(player, star) {
@@ -251,6 +235,7 @@
                 window.setTimeout(() => {
                     this.scene.restart()
                     gameText.setText('')
+                    score = 0;
                 }, 3000);
             }
 

@@ -46,6 +46,8 @@
             var gameOver = false;
             var scoreText;
             var gameText;
+
+
             // var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
             // spaceBar.on('down', listener)
@@ -61,6 +63,8 @@
             }
 
             function create() {
+                var scene = this;
+                var camera = this.cameras.main;
                 //  A simple background for our game
                 this.add.image(400, 300, 'sky');
 
@@ -138,24 +142,35 @@
 
                 this.physics.add.collider(player, bombs, hitBomb, null, this);
 
-                this.input.keyboard.on('keydown-A', function () {
-                    console.log("down prssed")
+                // this.input.keyboard.on('keydown-A', function () {
+                //     console.log("down prssed")
+                // })
+
+                // bottom of create function
+
+                this.input.keyboard.on('keydown', function (event) {
+                    console.log("physics world gravity: ", this.physics)
+
+                    // Toggle gravity
+                    if (scene.physics.world.gravity.y === 300) {
+                        scene.physics.world.gravity.y = -300;
+                    } else {
+                        scene.physics.world.gravity.y = 300;
+                    }
+
+                    console.log("key pressed: ", event.key)
+                    if (event.key === "ArrowDown") {
+                        console.log("camera angle: ", camera.rotation)
+                        if (camera.rotation === 3.14) {
+                            camera.setRotation(0);
+                        } else {
+                            camera.setRotation(3.14);
+                        }
+                    }
                 })
             }
 
             function update() {
-                var camera = this.cameras.main;
-
-                if (cursors.down.isDown) {
-                    this.physics.world.gravity.set(0, -300);
-                    player.setOrigin(0, 0);
-                    player.angle = 180;
-                    if (camera.angle === -180) {
-                        camera.setAngle(0);
-                    } else {
-                        camera.setAngle(180);
-                    }
-                }
                 if (cursors.left.isDown) {
                     player.setVelocityX(-160);
 
